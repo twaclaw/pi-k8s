@@ -82,6 +82,28 @@ ssh enabled (just create an empty file called "ssh" in the boot partition: `touc
     ursula     Ready    master   58m     v1.15.3
 
     ```
+    
+    ```shell
+    macondo@ursula:~ $ kubectl get pods -n "kube-system"
+    NAME                             READY   STATUS    RESTARTS   AGE
+    coredns-5c98db65d4-26sxz         1/1     Running   1          63m
+    coredns-5c98db65d4-q6n67         1/1     Running   1          63m
+    etcd-ursula                      1/1     Running   3          62m
+    kube-apiserver-ursula            1/1     Running   3          63m
+    kube-controller-manager-ursula   1/1     Running   3          63m
+    kube-flannel-ds-arm-5dfxz        1/1     Running   1          5m55s
+    kube-flannel-ds-arm-67sl6        1/1     Running   1          5m55s
+    kube-flannel-ds-arm-7ndxx        1/1     Running   1          5m55s
+    kube-flannel-ds-arm-fmbvn        1/1     Running   1          5m55s
+    kube-flannel-ds-arm-mrgjs        1/1     Running   2          5m55s
+    kube-proxy-4dsrv                 1/1     Running   1          8m13s
+    kube-proxy-9t8r9                 1/1     Running   1          8m13s
+    kube-proxy-cfnxf                 1/1     Running   3          63m
+    kube-proxy-lwjcc                 1/1     Running   1          8m13s
+    kube-proxy-wmt5v                 1/1     Running   1          18m
+    kube-scheduler-ursula            1/1     Running   3          62m
+
+    ```
 
     * [Optional] In addition, devices hostnames can be changed. This playbook has to be applied to each individual device, for instance:
         

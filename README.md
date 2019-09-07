@@ -31,13 +31,58 @@ ssh enabled (just create an empty file called "ssh" in the boot partition: `touc
     
         ```bash
         ansible-playbook playbooks/deploy_keys.yml -i inventory.cfg --user macondo --ask-pass  -e ssh_key=FULL_PATH_TO_ID_RSA_PUB 
-        
-        ansible-playbook playbooks/install_k8s_deps.yml -i inventory.cfg  --user macondo --ask-become-pass
-        
-        ansible-playbook playbooks/append_k8s_hostnames.yml -i inventory.cfg  --user macondo --ask-become-pass -e ansible_hostname
 
         ansible-playbook playbooks/enable_mem_control_group.yml -i inventory.cfg  --user macondo --ask-become-pass
+
+        ansible-playbook playbooks/append_k8s_hostnames.yml -i inventory.cfg  --user macondo --ask-become-pass -e ansible_hostname
+
+        ansible-playbook playbooks/install_k8s_deps.yml -i inventory.cfg  --user macondo --ask-become-pass
         ```
+
+     At this point `kubectl get nodes` should return one node
+     ```shell
+        macondo@ursula:~ $ kubectl get nodes
+        NAME     STATUS     ROLES    AGE   VERSION
+        ursula   NotReady   master   25m   v1.15.3
+    ```
+    * call 
+    ```
+        kubeadm token create --print-join-command
+    ```
+    * pass the result as an argument to 
+    ```shell
+         join_command=$(ssh macondo@ursula "kubeadm token create --print-join-command")
+         
+         ansible-playbook playbooks/join_cluster.yml -i nodes.cfg --user macondo --ask-become-pass -e "join_command=$join_command" 
+
+         macondo@ursula:~ $ kubectl get nodes
+            NAME       STATUS     ROLES    AGE   VERSION
+            amaranta   NotReady   <none>   27s   v1.15.3
+            pilar      NotReady   <none>   10m   v1.15.3
+            rebeca     NotReady   <none>   27s   v1.15.3
+            remedios   NotReady   <none>   27s   v1.15.3
+            ursula     NotReady   master   55m   v1.15.3
+    ```
+
+    In the master run
+
+    ```
+    kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.11.0/Documentation/kube-flannel.yml
+    ```
+
+    The status should change to ready
+
+    ```
+    macondo@ursula:~ $ kubectl get nodes
+    NAME       STATUS   ROLES    AGE     VERSION
+    amaranta   Ready    <none>   2m56s   v1.15.3
+    pilar      Ready    <none>   13m     v1.15.3
+    rebeca     Ready    <none>   2m56s   v1.15.3
+    remedios   Ready    <none>   2m56s   v1.15.3
+    ursula     Ready    master   58m     v1.15.3
+
+    ```
+
     * [Optional] In addition, devices hostnames can be changed. This playbook has to be applied to each individual device, for instance:
         
         ```bash

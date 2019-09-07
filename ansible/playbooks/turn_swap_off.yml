@@ -1,0 +1,8 @@
+---
+  - hosts: "all"
+    gather_facts: false
+    become: true
+    become_method: sudo
+
+    tasks:
+       - include_tasks: ../tasks/turn_swap_off.yml

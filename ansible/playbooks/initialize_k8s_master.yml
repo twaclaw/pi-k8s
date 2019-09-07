@@ -1,0 +1,9 @@
+---
+  - hosts: "all"
+    gather_facts: false
+    become: true
+    become_method: sudo
+
+    tasks:
+       - include_tasks: ../tasks/start_docker_daemon.yml
+       - include_tasks: ../tasks/initialize_k8s_master.yml

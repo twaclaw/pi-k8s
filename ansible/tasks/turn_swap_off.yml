@@ -1,0 +1,6 @@
+- name: turn swap off
+  command: "{{item}}"
+  with_items:
+    - dphys-swapfile swapoff 
+    - dphys-swapfile uninstall
+    - update-rc.d dphys-swapfile remove

@@ -1,0 +1,11 @@
+---
+  - hosts: "all"
+    gather_facts: false
+    become: true
+    become_method: sudo
+
+    tasks:
+       - include_tasks: ../tasks/install_k8s_deps.yml
+       - include_tasks: ../tasks/add_user_to_docker_group.yml
+      
+    

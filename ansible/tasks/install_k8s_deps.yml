@@ -1,0 +1,56 @@
+- name: add Docker apt-key
+  apt_key:
+    url:  https://download.docker.com/linux/raspbian/gpg
+    state: present
+
+- name: add Dockers' APT repository
+  apt_repository:
+   repo: deb https://download.docker.com/linux/raspbian stretch edge
+   state: present
+   filename: 'docker'
+
+- name: install docker-ce 
+  apt:
+    name: docker-ce
+    update_cache: yes
+    state: present
+
+- name: docker post installation
+  shell: echo "docker-ce hold" | dpkg --set-selections
+
+- name: install APT Transport HTTPS
+  apt:
+    name: apt-transport-https
+    state: present
+
+- name: add Kubernetes apt-key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: add Kubernetes' APT repository
+  apt_repository:
+   repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+   state: present
+   filename: 'kubernetes'
+
+- name: install kubelet
+  apt:
+    name: kubelet
+    state: present
+    update_cache: true
+
+- name: install kubeadm
+  apt:
+    name: kubeadm
+    state: present
+
+- name: enable service docker
+  service:
+    name: docker
+    enabled: yes
+
+- name: install nfs-common
+  apt:
+    name: nfs-common
+    state: present

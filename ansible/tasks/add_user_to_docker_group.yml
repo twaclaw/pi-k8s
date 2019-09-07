@@ -1,0 +1,5 @@
+- name: adding existing user macondo to group sudo
+  user:
+    name: 'macondo'
+    groups: docker
+    append: yes

@@ -1,0 +1,6 @@
+---
+  - hosts: "all"
+    gather_facts: false
+
+    tasks:
+       - include_tasks: ../tasks/copy_ssh_key.yml

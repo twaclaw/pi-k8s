@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: no
+  become: true
+
+  tasks:
+    - name: reboot server
+      reboot:
+        test_command: whoami

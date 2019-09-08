@@ -38,10 +38,9 @@ spec:
       - name: install
         image: busybox
         command:
-        - wget
-        - "-O"
-        - "/work-dir/index.html"
-        - http://kubernetes.io
+        - /bin/sh
+        - "-c"
+        - "echo '<!doctype html><html><body>Hola $hostname</body></html>' > /work-dir/index.html"
         volumeMounts:
         - name: workdir
           mountPath: "/work-dir"

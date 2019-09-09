@@ -113,6 +113,17 @@ ssh enabled (just create an empty file called "ssh" in the boot partition: `touc
 
     My cluster nodes are called: Ursula, Amaranta, Rebeca, Pilar and Remedios.
 
+
+## Kubernetes
+
+```
+    kubectl -n test apply namespace.yml
+    kubectl -n test apply deployment.yml
+    #kubectl scale --replicas deployment 
+    kubectl get pod -o wide
+```
+
+
 ## Additional Ansible Scripts
 
 ### Shutdown and Reboot

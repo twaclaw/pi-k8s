@@ -37,13 +37,23 @@ spec:
       initContainers:
       - name: install
         image: busybox
-        command:
-        - /bin/sh
-        - "-c"
-        - "echo '<!doctype html><html><body>Hola $hostname</body></html>' > /work-dir/index.html"
+        command: ["sh", "-c"]
+        args:
+        - echo -e "<!doctype html><html><body>" > /work-dir/index.html;
+          echo -e "NODE:" $MY_NODE_NAME "POD:" $MY_POD_NAME >>  /work-dir/index.html;
+          echo -e "</body></html>" >> /work-dir/index.html;
         volumeMounts:
         - name: workdir
           mountPath: "/work-dir"
+        env:
+        - name: MY_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
       dnsPolicy: Default
       volumes:
       - name: workdir

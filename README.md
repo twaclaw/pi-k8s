@@ -125,10 +125,59 @@ ssh enabled (just create an empty file called "ssh" in the boot partition: `touc
 
     kubectl scale --replicas 5 deployment/nginx -n test
 
-    kubectl get pod -o wide
+    kubectl get pod o-o wide -n test
 
 ```
+```
+$ while true; do curl --silent ursula:32015 |grep NODE; sleep 1;done
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+```
 
+```console
+macondo@ursula:~ $ kubectl get pod -o wide -n test
+NAME                   READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+nginx-f654b8fb-h2c5k   1/1     Running   0          73s   10.244.3.12   rebeca   <none>           <none>
+```
+
+```console
+macondo@ursula:~ $ kubectl get pod -o wide -n test
+NAME                   READY   STATUS            RESTARTS   AGE    IP            NODE       NOMINATED NODE   READINESS GATES
+nginx-f654b8fb-5cnjh   0/1     PodInitializing   0          7s     10.244.4.7    amaranta   <none>           <none>
+nginx-f654b8fb-6666g   0/1     PodInitializing   0          7s     10.244.2.7    remedios   <none>           <none>
+nginx-f654b8fb-h2c5k   1/1     Running           0          115s   10.244.3.12   rebeca     <none>           <none>
+nginx-f654b8fb-kzv8w   0/1     PodInitializing   0          7s     10.244.3.13   rebeca     <none>           <none>
+nginx-f654b8fb-prq4k   0/1     PodInitializing   0          7s     10.244.1.15   pilar      <none>           <none>
+```
+
+```console
+$     while true; do curl --silent ursula:32015 |grep NODE; sleep 1;done
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: pilar     POD: nginx-f654b8fb-prq4k
+NODE: remedios  POD: nginx-f654b8fb-6666g
+NODE: amaranta  POD: nginx-f654b8fb-5cnjh
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: remedios  POD: nginx-f654b8fb-6666g
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: amaranta  POD: nginx-f654b8fb-5cnjh
+NODE: amaranta  POD: nginx-f654b8fb-5cnjh
+NODE: remedios  POD: nginx-f654b8fb-6666g
+NODE: rebeca    POD: nginx-f654b8fb-kzv8w
+NODE: amaranta  POD: nginx-f654b8fb-5cnjh
+NODE: pilar     POD: nginx-f654b8fb-prq4k
+NODE: remedios  POD: nginx-f654b8fb-6666g
+```
 
 ## Additional Ansible Scripts
 

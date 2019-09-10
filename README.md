@@ -116,11 +116,17 @@ ssh enabled (just create an empty file called "ssh" in the boot partition: `touc
 
 ## Kubernetes
 
-```
+```console
     kubectl -n test apply namespace.yml
     kubectl -n test apply deployment.yml
-    #kubectl scale --replicas deployment 
+
+
+    while true; do curl --silent ursula:31151  |grep node; sleep 1;done
+
+    kubectl scale --replicas 5 deployment/nginx -n test
+
     kubectl get pod -o wide
+
 ```
 
 

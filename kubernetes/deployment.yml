@@ -40,7 +40,7 @@ spec:
         command: ["sh", "-c"]
         args:
         - echo -e "<!doctype html><html><body>" > /work-dir/index.html;
-          echo -e "NODE:" $MY_NODE_NAME "POD:" $MY_POD_NAME >>  /work-dir/index.html;
+          echo -e "NODE:" $MY_NODE_NAME "\tPOD:" $MY_POD_NAME >>  /work-dir/index.html;
           echo -e "</body></html>" >> /work-dir/index.html;
         volumeMounts:
         - name: workdir

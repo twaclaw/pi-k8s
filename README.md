@@ -16,7 +16,7 @@ Kubernetes (k8s) is an awesome tool. It allows deploying and monitoring scalable
 
 ## Setup
 
-### Bootstrap and Configuration
+### Installing Kubernetes
 
     
 ```bash
@@ -35,11 +35,13 @@ At this point `kubectl get nodes` should return one node
         ursula   NotReady   master   25m   v1.15.3
     ```
     * call 
-    ```
+    ```console
         kubeadm token create --print-join-command
     ```
+    
     * pass the result as an argument to 
-    ```shell
+
+    ```console
          join_command=$(ssh macondo@ursula "kubeadm token create --print-join-command")
          
          ansible-playbook playbooks/join_cluster.yml -i nodes.cfg --user macondo --ask-become-pass -e "join_command=$join_command" 
@@ -96,14 +98,14 @@ At this point `kubectl get nodes` should return one node
 
     * [Optional] In addition, devices hostnames can be changed. This playbook has to be applied to each individual device, for instance:
         
-        ```bash
+```bash
         ansible-playbook playbooks/change_hostname.yml -i "172.16.0.178," --user macondo --ask-become-pass -e hostname=remedios 
-        ```
+```
 
     My cluster nodes are called: Ursula, Amaranta, Rebeca, Pilar and Remedios.
 
 
-## Kubernetes
+## Kubernetes: Application Example
 
 ```console
     kubectl -n test apply namespace.yml
@@ -117,6 +119,7 @@ At this point `kubectl get nodes` should return one node
     kubectl get pod o-o wide -n test
 
 ```
+
 ```
 $ while true; do curl --silent ursula:32015 |grep NODE; sleep 1;done
 NODE: rebeca    POD: nginx-f654b8fb-h2c5k
@@ -187,6 +190,10 @@ ansible all -m apt -a 'name=kubeadm state=absent purge=yes autoremove=yes' --bec
 
 
 ```
+
+## Conclusions
+
+This exercise just scratched the surface of the potential of Kubernertes. Kubernetes is very useful to create multi-tier applications, scaling up/down automatically, and keeping the status. 
 
 ## Credits
 

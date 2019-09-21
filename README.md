@@ -37,7 +37,6 @@ The master node is `ursula`. The scope of the different Ansible playbooks is def
 
 ---
 ## Setup
-The following playbooks are executed from a laptop in the same network as the cluster. 
 
 ### Preparation
 

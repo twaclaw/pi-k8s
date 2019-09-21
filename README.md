@@ -18,7 +18,7 @@ Kubernetes (k8s) is an awesome tool. It is also a complex beast. Most of the tim
 
 My cluster is called "Macondo", and the nodes were correspondingly christened: `ursula`, `amaranta`, `pilar`, `remedios`, and `rebeca`. All nodes have a user `macondo` (e.g. `macondo@ursula`).
 
-## Contents of this repo
+## Contents of this Repo
 
 This repo is structured as follows:
 

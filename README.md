@@ -8,7 +8,7 @@
 
 ## Motivation 
 
-Kubernetes (k8s) is an awesome tool. It is also a complex beast. Most of the time, developers don't have to deal with the complexity of setting up a cluster. It is possible to use a single node solution (such as [Minikube](https://github.com/kubernetes/minikube) or [microk8s](https://microk8s.io/)), or one of the fully-managed cluster solutions offered by major cloud providers. In the former case, the complexity of creating a cluster is non-existent (there is not cluster), and in the latter case is taken care of by the vendor. 
+Kubernetes (k8s) is an awesome tool. It is also a complex beast. Most of the time, developers don't have to deal with the complexity of setting up a cluster; it is possible to use a single node solution (such as [Minikube](https://github.com/kubernetes/minikube) or [microk8s](https://microk8s.io/)), or one of the fully-managed cluster solutions offered by major cloud providers. In the former case, the complexity of creating a cluster is non-existent (there is not cluster), and in the latter case is taken care of by the vendor. 
 
  Then why to bother setting up your own cluster? Full control solutions (e.g. kubeadm, kubespray) are more flexible and provide finer tunning possibilities. Doing it on a small [Raspberry Pi Cluster](https://github.com/twaclaw/pi-cluster) is mainly for the sake of learning and having fun. 
 
@@ -18,7 +18,7 @@ Kubernetes (k8s) is an awesome tool. It is also a complex beast. Most of the tim
 
 My cluster is called "Macondo", and the nodes were correspondingly christened: `ursula`, `amaranta`, `pilar`, `remedios`, and `rebeca`. All nodes have a user `macondo` (e.g. `macondo@ursula`).
 
-## Contents of this repo
+## Contents of this Repo
 
 This repo is structured as follows:
 
@@ -37,7 +37,6 @@ The master node is `ursula`. The scope of the different Ansible playbooks is def
 
 ---
 ## Setup
-The following playbooks are executed from a laptop in the same network as the cluster. 
 
 ### Preparation
 
@@ -125,9 +124,9 @@ Et voilà!
 
 ## k8s: Application Example
 
-The whole idea of this exercise is to be able to deploy Kubernetes applications. The [deployment.yml](./kubernetes/deployment.yml) manifest deploys an `nginx` image configured to print the pod and node names. 
+The whole idea of this exercise is to be able to deploy Kubernetes applications. The [deployment.yml](./kubernetes/deployment.yml) manifest describes an `nginx` image configured to print the pod and node names. 
 
-It is a good practice to separate namespaces. [namespace.yml](./kubernetes/namespace.yml) creates a namespaced called `test`. Subsequent commands use the `-n test` flag to operate in that namespace:
+It is a good practice to separate namespaces. [namespace.yml](./kubernetes/namespace.yml) creates a namespace called `test`. Subsequent commands use the `-n test` flag to operate in that namespace:
 
 ```console
 macondo@ursula:~ $  kubectl apply namespace.yml
@@ -172,7 +171,7 @@ Seems to be working!
 
 ### Scaling Up the Number of Replicas
 
-The [manifesto](./kubernetes/deployment.yml] specifies one single replica, this is why all requests are answered by a single pod. The following command scales the number of replicas to 5:  
+The [manifest](./kubernetes/deployment.yml) specifies one single replica, this is why all requests are answered by a single pod. The following command scales the number of replicas to 5:  
 
 ```console
 macondo@ursula:~ $ kubectl scale --replicas 5 deployment/nginx -n test
@@ -218,10 +217,10 @@ Nice, k8s is acting as a load-balancer!!!
 
 ## Conclusions
 
-This exercise just scratched the surface of the potential of Kubernertes. Kubernetes is very useful to create multi-tier applications, scaling up/down automatically, and keeping the status. 
+This exercise illustrated how to set up Kubernetes on a Raspberry Pi cluster. A simple load-balancer was used to test the Kubernetes installation. This example just scratched the surface of the potential of Kubernertes; Kubernetes is very useful for creating multi-tier applications, scaling up/down replicas automatically, monitoring deployments, and many other powerful operations.  
 
 
 ## Credits
 
-- I adapted most of the Ansible scripts from [This article](https://itnext.io/building-a-kubernetes-cluster-on-raspberry-pi-and-low-end-equipment-part-1-a768359fbba3) by [Eduard Iskandarov](https://itnext.io/@eduard.iskandarov). 
+- I adapted most of the Ansible scripts from [this post](https://itnext.io/building-a-kubernetes-cluster-on-raspberry-pi-and-low-end-equipment-part-1-a768359fbba3) by [Eduard Iskandarov](https://itnext.io/@eduard.iskandarov). 
 - Source image: [AbeBooks.com](https://www.abebooks.com/books/one-hundred-years-of-solitude-50th-anniversary/index.shtml)

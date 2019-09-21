@@ -124,7 +124,7 @@ Et voilà!
 
 ## k8s: Application Example
 
-The whole idea of this exercise is to be able to deploy Kubernetes applications. The [deployment.yml](./kubernetes/deployment.yml) manifest deploys an `nginx` image configured to print the pod and node names. 
+The whole idea of this exercise is to be able to deploy Kubernetes applications. The [deployment.yml](./kubernetes/deployment.yml) manifest describes an `nginx` image configured to print the pod and node names. 
 
 It is a good practice to separate namespaces. [namespace.yml](./kubernetes/namespace.yml) creates a namespaced called `test`. Subsequent commands use the `-n test` flag to operate in that namespace:
 

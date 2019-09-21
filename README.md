@@ -8,11 +8,11 @@
 
 ## Motivation 
 
-Kubernetes (k8s) is an awesome tool. It is also a complex beast; fortunately, most of the complexity is hidden behind a few tools and commands. Most of the time, developers have to deal only with the application logic, and this logic can be expressed on a nice, declarative way. 
+Kubernetes (k8s) is an awesome tool. It is also a complex beast; fortunately, most of the complexity is hidden behind a few tools and commands. Developers have to deal only with the application logic, and this logic can be expressed on a nice, declarative way. 
 
 Nowadays, it is possible to start experimenting with k8s either with a single node solution (such as [Minikube](https://github.com/kubernetes/minikube) or [microk8s](https://microk8s.io/)), or with one of the  fully-managed cluster solutions offered by major cloud providers. In the former case, the complexity of creating a cluster is non-existent (there is not cluster), and in the latter case is taken care of by the vendor. 
 
- Then why to bother with your own cluster? Well, because this complexity is also fun. XXXX Solutions are more fleixible and provide a larger degree of control, or you might have restrictions (e.g. that your cluster has to be on premises, or you just want to learn, and so on.)   Tools for creating your own cluster include kubeadmin, rancher, and ..
+ Then why to bother setting up your own cluster? On the one hand, full control solutions (e.g. kubeadm, kubespray) are more flexible and provide finer tunning possibilities. Doing it on a [Raspberry Pi Cluster](https://github.com/twaclaw/pi-cluster) is just for the sake of learning and having fun. 
 
 ## Prerequisites 
 
@@ -31,7 +31,7 @@ This repo consists of the following directories:
 
 [Highly available clusters](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/) require at least 3 masters. I opted for a simpler configuration with 1 master and 4 nodes. 
 
-The master node is `ursula` (of course). The scope of the different Ansible playbooks is defined via the  different inventory files:
+The master node is `ursula` (of course). The scope of the different Ansible playbooks is defined via  different inventory files:
 
 * [inventory.cfg](./ansible/inventory.cfg): all nodes
 * [masters.cfg](./ansible/masters.cfg): control plane (i.e., master nodes, namely `ursula`)
@@ -131,36 +131,13 @@ Et voilà!
 
 ## k8s: Application Example
 
-The idea of this exercise is, of course, to be able to run k8s applications. 
+The whole idea of this exercise is to be able to deploy Kubernetes applications. The Manifests in the [kubernetes](./kubernetes) deploy an `nginx` image configured to print the pod and node names. 
+
+It is a good practice to separate name spaces, so for the sake of being tidy I created a `test` namespace. 
+
 ```console
 macondo@ursula:~ $  kubectl -n test apply namespace.yml
 macondo@ursula:~ $  kubectl -n test apply deployment.yml
-```
-
-```console
-$ while true; do curl --silent ursula:31151  |grep node; sleep 1;done
-```
-
-```
-macondo@ursula:~ $ kubectl scale --replicas 5 deployment/nginx -n test
-
-macondo@ursula:~ $ kubectl get pod o-o wide -n test
-```
-
-```
-$ while true; do curl --silent ursula:32015 |grep NODE; sleep 1;done
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
-NODE: rebeca    POD: nginx-f654b8fb-h2c5k
 ```
 
 ```console
@@ -168,6 +145,43 @@ macondo@ursula:~ $ kubectl get pod -o wide -n test
 NAME                   READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
 nginx-f654b8fb-h2c5k   1/1     Running   0          73s   10.244.3.12   rebeca   <none>           <none>
 ```
+
+The port in which the application is running can be by inspecting the service:
+
+```console
+macondo@ursula:~ $ kubectl -n test describe service nginx
+```
+
+In this case, the port number is 32015
+
+The following command makes a request to the nginx application every 1s. 
+
+```console
+$ while true; do curl --silent ursula:32015 |grep NODE; sleep 1;done
+
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+NODE: rebeca    POD: nginx-f654b8fb-h2c5k
+```
+
+```console
+macondo@ursula:~ $ kubectl scale --replicas 5 deployment/nginx -n test
+
+macondo@ursula:~ $ kubectl get pod o-o wide -n test
+```
+
+
+
+
 
 ```console
 macondo@ursula:~ $ kubectl get pod -o wide -n test

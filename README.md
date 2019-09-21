@@ -8,7 +8,7 @@
 
 ## Motivation 
 
-Kubernetes (k8s) is an awesome tool. It is also a complex beast. Most of the time, developers don't have to deal with complexity of setting up a cluster. It is possible to use a single node solution (such as [Minikube](https://github.com/kubernetes/minikube) or [microk8s](https://microk8s.io/)), or one of the fully-managed cluster solutions offered by major cloud providers. In the former case, the complexity of creating a cluster is non-existent (there is not cluster), and in the latter case is taken care of by the vendor. 
+Kubernetes (k8s) is an awesome tool. It is also a complex beast. Most of the time, developers don't have to deal with the complexity of setting up a cluster. It is possible to use a single node solution (such as [Minikube](https://github.com/kubernetes/minikube) or [microk8s](https://microk8s.io/)), or one of the fully-managed cluster solutions offered by major cloud providers. In the former case, the complexity of creating a cluster is non-existent (there is not cluster), and in the latter case is taken care of by the vendor. 
 
  Then why to bother setting up your own cluster? Full control solutions (e.g. kubeadm, kubespray) are more flexible and provide finer tunning possibilities. Doing it on a small [Raspberry Pi Cluster](https://github.com/twaclaw/pi-cluster) is mainly for the sake of learning and having fun. 
 
@@ -55,7 +55,7 @@ $ ansible-playbook playbooks/append_k8s_hostnames.yml -i inventory.cfg  --user m
 
 ### Installing Kubernetes
 
-This command installs the required dependencies: Docker, kubelet, and kubeadm:
+This command installs the required dependencies, i.e., Docker, kubelet, and kubeadm:
 
 ```console
 $ ansible-playbook playbooks/install_k8s_deps.yml -i inventory.cfg  --user macondo --ask-become-pass
@@ -100,7 +100,7 @@ remedios   NotReady   <none>   27s   v1.15.3
 ursula     NotReady   master   55m   v1.15.3
 ```
 
-The nodes are up, but still not ready. This is because the [networking part](https://kubernetes.io/docs/concepts/cluster-administration/networking/) is missing. I used [flannel](https://github.com/coreos/flannel#flannel) as suggested in [this post](https://itnext.io/building-a-kubernetes-cluster-on-raspberry-pi-and-low-end-equipment-part-1-a768359fbba3).
+The nodes are up, but still not ready. This is because the [networking part](https://kubernetes.io/docs/concepts/cluster-administration/networking/) is missing. I used [flannel](https://github.com/coreos/flannel#flannel) as suggested in [this post](https://itnext.io/building-a-kubernetes-cluster-on-raspberry-pi-and-low-end-equipment-part-1-a768359fbba3):
 
 
 ```console
@@ -167,17 +167,18 @@ NODE: rebeca    POD: nginx-f654b8fb-h2c5k
 NODE: rebeca    POD: nginx-f654b8fb-h2c5k
 NODE: rebeca    POD: nginx-f654b8fb-h2c5k
 ```
-The application is running!
+
+Seems to be working!
 
 ### Scaling Up the Number of Replicas
 
-The manifesto specifies one single replica, this is why all requests are answered by a single pod. The following command scales the number of replicas to 5.  
+The [manifesto](./kubernetes/deployment.yml] specifies one single replica, this is why all requests are answered by a single pod. The following command scales the number of replicas to 5:  
 
 ```console
 macondo@ursula:~ $ kubectl scale --replicas 5 deployment/nginx -n test
 ```
 
-We can verify the effect of this command by getting the pods:
+We can verify the effect of this command by getting the pods at `ursula`:
 
 ```console
 macondo@ursula:~ $ kubectl get pod -o wide -n test
@@ -189,7 +190,7 @@ nginx-f654b8fb-kzv8w   0/1     PodInitializing   0          7s     10.244.3.13  
 nginx-f654b8fb-prq4k   0/1     PodInitializing   0          7s     10.244.1.15   pilar      <none>           <none>
 ```
 
-And finally by querying the application at `ursula:32015`. 
+And finally by querying again the application:
 
 ```console
 $ while true; do curl --silent ursula:32015 |grep NODE; sleep 1;done
@@ -211,15 +212,14 @@ NODE: pilar     POD: nginx-f654b8fb-prq4k
 NODE: remedios  POD: nginx-f654b8fb-6666g
 ```
 
-Nice, k8s is acting as a load-balancer. 
+Nice, k8s is acting as a load-balancer!!! 
+
+---
 
 ## Conclusions
 
 This exercise just scratched the surface of the potential of Kubernertes. Kubernetes is very useful to create multi-tier applications, scaling up/down automatically, and keeping the status. 
 
-## Conclusions
-
-This exercise just scratched the surface of the potential of Kubernertes. Kubernetes is very useful to create multi-tier applications, scaling up/down automatically, and keeping the status. 
 
 ## Credits
 

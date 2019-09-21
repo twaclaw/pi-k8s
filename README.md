@@ -218,7 +218,7 @@ Nice, k8s is acting as a load-balancer!!!
 
 ## Conclusions
 
-This exercise just scratched the surface of the potential of Kubernertes. Kubernetes is very useful to create multi-tier applications, scaling up/down automatically, and keeping the status. 
+This exercise illustrated how to create a simple load-balancer using Kubernetes on a Raspberry Pi cluster. The presented example just scratched the surface of the potential of Kubernertes; Kubernetes is very useful for creating multi-tier applications, scaling up/down replicas automatically, monitoring deployments, and many other applications.  
 
 
 ## Credits

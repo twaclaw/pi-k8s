@@ -218,10 +218,10 @@ Nice, k8s is acting as a load-balancer!!!
 
 ## Conclusions
 
-This exercise illustrated how to create a simple load-balancer using Kubernetes on a Raspberry Pi cluster. The presented example just scratched the surface of the potential of Kubernertes; Kubernetes is very useful for creating multi-tier applications, scaling up/down replicas automatically, monitoring deployments, and many other applications.  
+This exercise illustrated how to set up Kubernetes on a Raspberry Pi cluster. A simple load-balancer was used to test the Kubernetes installation. This example just scratched the surface of the potential of Kubernertes; Kubernetes is very useful for creating multi-tier applications, scaling up/down replicas automatically, monitoring deployments, and many other applications.  
 
 
 ## Credits
 
-- I adapted most of the Ansible scripts from [This article](https://itnext.io/building-a-kubernetes-cluster-on-raspberry-pi-and-low-end-equipment-part-1-a768359fbba3) by [Eduard Iskandarov](https://itnext.io/@eduard.iskandarov). 
+- I adapted most of the Ansible scripts from [this post](https://itnext.io/building-a-kubernetes-cluster-on-raspberry-pi-and-low-end-equipment-part-1-a768359fbba3) by [Eduard Iskandarov](https://itnext.io/@eduard.iskandarov). 
 - Source image: [AbeBooks.com](https://www.abebooks.com/books/one-hundred-years-of-solitude-50th-anniversary/index.shtml)

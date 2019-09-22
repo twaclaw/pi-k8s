@@ -171,7 +171,7 @@ Seems to be working!
 
 ### Scaling Up the Number of Replicas
 
-The [manifesto](./kubernetes/deployment.yml) specifies one single replica, this is why all requests are answered by a single pod. The following command scales the number of replicas to 5:  
+The [manifest](./kubernetes/deployment.yml) specifies one single replica, this is why all requests are answered by a single pod. The following command scales the number of replicas to 5:  
 
 ```console
 macondo@ursula:~ $ kubectl scale --replicas 5 deployment/nginx -n test

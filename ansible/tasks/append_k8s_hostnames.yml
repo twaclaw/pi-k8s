@@ -2,8 +2,8 @@
   blockinfile:
     path: /etc/hosts
     block: |
-      192.168.0.81    ursula    master1.kube.local
-      192.168.0.80    rebeca    node1.kube.local
+      192.168.0.80    ursula    master1.kube.local
+      192.168.0.81    rebeca    node1.kube.local
       192.168.0.87    amaranta  node2.kube.local
       192.168.0.178   remedios  node3.kube.local
       192.168.0.24    pilar     node4.kube.local

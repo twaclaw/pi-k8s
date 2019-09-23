@@ -70,7 +70,9 @@ Initialize the master:
 $ ansible-playbook playbooks/initialize_k8s_master.yml -i masters.cfg --user macondo --ask-become-pass
 ```
 
-At this point, running the command `kubectl get nodes`  in the master node should return one node:
+(This step might take several minutes to complete and is the most likely to fail. It is necessary to delete `/etc/kubernetes` and `/var/lib/etcd` and restart the master node before retrying.)
+
+Upon success, running the command `kubectl get nodes`  in the master node should return one node:
 
 ```console
 macondo@ursula:~ $ kubectl get nodes
@@ -119,6 +121,15 @@ ursula     Ready    master   58m     v1.15.3
 ```
 
 Et voilà!
+
+### Extra
+
+Ansible ad-hoc commands are handy when performing operations that are not defined in the playbooks, for instance uninstalling a package.  The following example uninstalls `kubelet`:
+
+```console
+$ ansible all -m apt -a 'name=kubelet state=absent purge=yes autoremove=yes' --become -i inventory.cfg  --ask-become-pass -u macondo
+
+```
 
 ---
 

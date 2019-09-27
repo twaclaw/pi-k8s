@@ -1,7 +1,7 @@
 # modified from https://github.com/toidi/home-kubernetes
 
 - name: initialize the cluster
-  command: kubeadm init --pod-network-cidr=10.244.0.0/16
+  command: sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address={{ master_ip }}
   args:
     creates: /root/cluster_initialized.txt
   register: kubeadm_init_raw

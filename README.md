@@ -10,7 +10,7 @@
 
 Kubernetes (k8s) is an awesome tool. It is also a complex beast. Most of the time, developers don't have to deal with the complexity of setting up a cluster; it is possible to use a single node solution (such as [Minikube](https://github.com/kubernetes/minikube) or [microk8s](https://microk8s.io/)), or one of the fully-managed cluster solutions offered by major cloud providers. In the former case, the complexity of creating a cluster is non-existent (there is not cluster), and in the latter case is taken care of by the vendor. 
 
- Then why to bother setting up your own cluster? Full control solutions (e.g. kubeadm, kubespray) are more flexible and provide finer tunning possibilities. Doing it on a small [Raspberry Pi Cluster](https://github.com/twaclaw/pi-cluster) is mainly for the sake of learning and having fun. 
+ Then, why to bother setting up your own cluster? Full control solutions (e.g. kubeadm, kubespray) are more flexible and provide finer tunning possibilities. Doing it on a small [Raspberry Pi Cluster](https://github.com/twaclaw/pi-cluster) is mainly for the sake of learning and having fun. 
 
 ## Prerequisites 
 
@@ -46,7 +46,7 @@ As indicated in [this post](https://itnext.io/building-a-kubernetes-cluster-on-r
 $ ansible-playbook playbooks/enable_mem_control_group.yml -i inventory.cfg  --user macondo --ask-become-pass
 ```
 
-Nodes must be able to talk to each other, so let's do the appropriate introductions (I'm not quite positive though whether this step is necessary). The following command appends the IP addresses of all nodes in the `/etc/hosts` file of each node:
+Nodes must be able to talk to each other, so let's do the appropriate introductions (I'm not quite positive though whether this step is necessary). The following command appends the IP addresses of all nodes in the `/etc/hosts` file of each node. Edit [append_k8s_hostnames.yml](./tasks/append_k8s_hostnames.yml) and run:
 
 ```console
 $ ansible-playbook playbooks/append_k8s_hostnames.yml -i inventory.cfg  --user macondo --ask-become-pass -e ansible_hostname
@@ -67,10 +67,10 @@ $ ansible-playbook playbooks/install_k8s_deps.yml -i inventory.cfg  --user macon
 Initialize the master:
 
 ```console
-$ ansible-playbook playbooks/initialize_k8s_master.yml -i masters.cfg --user macondo --ask-become-pass
+$ ansible-playbook playbooks/initialize_k8s_master.yml -i masters.cfg --user macondo --ask-become-pass -e master_ip=MASTER_IP_ADDR
 ```
 
-(This step might take several minutes to complete and is the most likely to fail. It is necessary to delete `/etc/kubernetes` and `/var/lib/etcd` and restart the master node before retrying.)
+(This step might take several minutes to complete, and is the most likely to fail; see the notes at the end of this section.)
 
 Upon success, running the command `kubectl get nodes`  in the master node should return one node:
 
@@ -105,10 +105,10 @@ The nodes are up, but still not ready. This is because the [networking part](htt
 
 
 ```console
-macondo@ursula:~ $ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.11.0/Documentation/kube-flannel.yml
+macondo@ursula:~ $ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
-The status should change to ready:
+After rebooting, the status should change to ready:
 
 ```console
 macondo@ursula:~ $ kubectl get nodes
@@ -122,14 +122,31 @@ ursula     Ready    master   58m     v1.15.3
 
 Et voilà!
 
-### Extra
+### Notes
 
-Ansible ad-hoc commands are handy when performing operations that are not defined in the playbooks, for instance uninstalling a package.  The following example uninstalls `kubelet`:
+* **Note 1:**  Ansible ad-hoc commands are handy when performing operations that are not defined in the playbooks, for instance uninstalling a package.  The following example uninstalls `kubelet`:
 
-```console
-$ ansible all -m apt -a 'name=kubelet state=absent purge=yes autoremove=yes' --become -i inventory.cfg  --ask-become-pass -u macondo
+    ```console
+    $ ansible all -m apt -a 'name=kubelet state=absent purge=yes autoremove=yes' --become -i inventory.cfg  --ask-become-pass -u macondo
 
-```
+    ```
+
+
+* **Note 2:** In case something goes wrong and the initialization has to be retried,  it might be necessary to reset all machines, as Indicated in [this thread](https://stackoverflow.com/questions/53525975/kubernetes-error-uploading-crisocket-timed-out-waiting-for-the-condition). For instance:
+
+
+    ```console
+    macondo@pilar: ~ $ sudo swapoff -a &&\
+    sudo kubeadm reset &&\
+    sudo systemctl daemon-reload &&\
+    sudo systemctl restart kubelet &&\
+    sudo iptables -F &&\
+    sudo iptables -t nat -F &&\
+    sudo iptables -t mangle -F &&\
+    sudo iptables -X
+    ```
+
+
 
 ---
 

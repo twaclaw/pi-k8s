@@ -157,8 +157,8 @@ The whole idea of this exercise is to be able to deploy Kubernetes applications.
 It is a good practice to separate namespaces. [namespace.yml](./kubernetes/namespace.yml) creates a namespace called `test`. Subsequent commands use the `-n test` flag to operate in that namespace:
 
 ```console
-macondo@ursula:~ $  kubectl apply namespace.yml
-macondo@ursula:~ $  kubectl -n test apply deployment.yml
+macondo@ursula:~ $  kubectl apply -f namespace.yml
+macondo@ursula:~ $  kubectl -n test apply -f deployment.yml
 ```
 
 The application is now running:
